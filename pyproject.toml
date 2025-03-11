@@ -1,0 +1,11 @@
+[project]
+name = "fastapi-game-library"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[full,standard]>=0.115.11",
+    "psycopg2>=2.9.10",
+    "sqlalchemy>=2.0.39",
+]
