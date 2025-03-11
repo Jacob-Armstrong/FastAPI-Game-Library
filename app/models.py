@@ -2,6 +2,8 @@ from sqlalchemy import Column, String, Integer, Numeric, ForeignKey
 from sqlalchemy.orm import relationship
 from .database import Base
 
+# Creates the tables in postgres
+
 class Games(Base):
     __tablename__ = "games"
 

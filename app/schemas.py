@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from typing import List, Optional
 
+# Required structures for API interaction
+
 # ================================
 # =             Game             =
 # ================================
