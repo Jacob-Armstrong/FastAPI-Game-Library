@@ -5,9 +5,7 @@ from .models import Base
 from .routers import games, publishers
 
 # Create tables from .models
-Base.metadata.drop_all(bind=engine)  # Drops all tables
-Base.metadata.create_all(bind=engine)  # Recreates tables with the fix
-
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
