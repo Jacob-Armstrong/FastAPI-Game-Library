@@ -45,3 +45,13 @@ def update_publisher(name: str, publisher_update: PublisherUpdate, db: Session =
     db.commit()
     db.refresh(publisher)
     return publisher
+
+@router.delete("/publishers/{name}", response_model=PublisherResponse)
+def delete_publisher(name: str, db: Session = Depends(get_db)):
+    publisher = db.query(Publishers).filter(Publishers.name == name).first()
+    if not publisher:
+        raise HTTPException(status_code=404, detail=f"{name} not found.")
+    
+    db.delete(publisher)
+    db.commit()
+    return publisher
