@@ -51,4 +51,4 @@ class PublisherResponse(PublisherBase):
         orm_mode = True
 
 class PublisherUpdate(PublisherBase):
-    description: Optional[str] = "Description goes here."
+    description: Optional[str] = None
