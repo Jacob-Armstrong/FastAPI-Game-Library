@@ -45,7 +45,7 @@ class PublisherCreate(PublisherBase):
 # Respond with 
 class PublisherResponse(PublisherBase):
     id: int
-    games: List[GameResponse] = []
+    games: str
 
     class Config:
         orm_mode = True

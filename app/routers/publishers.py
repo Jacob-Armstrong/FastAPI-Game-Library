@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from ..models import Publishers
-from ..schemas import PublisherCreate, PublisherResponse
+from ..schemas import PublisherCreate, PublisherResponse, PublisherUpdate
 from sqlalchemy.orm import Session
 from ..database import get_db
 
@@ -27,4 +27,21 @@ def get_publisher_by_name(name: str, db: Session = Depends(get_db)):
     publisher = db.query(Publishers).filter(Publishers.name == name).first()
     if not publisher:
         raise HTTPException(status_code=404, detail=f"{name} not found.")
+    return publisher
+
+@router.put("/publishers/{name}", response_model=PublisherResponse)
+def update_publisher(name: str, publisher_update: PublisherUpdate, db: Session = Depends(get_db)):
+    publisher = db.query(Publishers).filter(Publishers.name == name).first()
+    if not publisher:
+        raise HTTPException(status_code=404, detail=f"{name} not found.")
+    
+    if publisher_update.name:
+        publisher.name = publisher_update.name
+    if publisher_update.description:
+        publisher.description = publisher_update.description
+    if publisher_update.games:
+        publisher.games = publisher_update.games
+
+    db.commit()
+    db.refresh(publisher)
     return publisher
