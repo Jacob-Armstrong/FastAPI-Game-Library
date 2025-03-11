@@ -1,0 +1,32 @@
+services:
+  web:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./:/code:ro
+    environment:
+      - DATABASE_URL=postgresql://postgres:pass@db:5432/game_library
+    ports:
+      - "8000:80"
+    command: uvicorn app.main:app --host 0.0.0.0 --port 80
+
+  db:
+    image: postgres:17-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=game_library
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "game_library"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
+
+volumes:
+  postgres_data:

@@ -1,9 +1,9 @@
 [project]
 name = "fastapi-game-library"
 version = "0.1.0"
-description = "Add your description here"
+description = "A slightly more complex implementation of FastAPI, using postgres as a backend"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 dependencies = [
     "fastapi[full,standard]>=0.115.11",
     "psycopg2>=2.9.10",
