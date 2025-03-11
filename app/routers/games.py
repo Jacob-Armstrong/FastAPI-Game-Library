@@ -7,7 +7,7 @@ from ..schemas import GameCreate, GameResponse, GameUpdate
 
 router = APIRouter()
 
-@router.post("/gamers", response_model=GameResponse)
+@router.post("/games", response_model=GameResponse)
 def create_game(game: GameCreate, db: Session = Depends(get_db)):
     existing_game = db.query(Games).filter(Games.title == game.title).first()
     if existing_game:
@@ -16,7 +16,7 @@ def create_game(game: GameCreate, db: Session = Depends(get_db)):
     new_game = Games(**game.model_dump())
     db.add(new_game)
     db.commit()
-    db.refresh()
+    db.refresh(new_game)
     return new_game
 
 @router.get("/games", response_model=list[GameResponse])
