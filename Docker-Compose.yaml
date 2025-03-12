@@ -1,13 +1,15 @@
+version: "3.8"
+
 services:
   web:
     build: .
     depends_on:
       db:
-        condition: service_healthy
+        condition: service_healthy # Ensure database has started before attempting to connect
     volumes:
       - ./:/code:ro
     environment:
-      - DATABASE_URL=postgresql://postgres:pass@db:5432/game_library
+      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:pass@db:5432/game_library}
     ports:
       - "8000:80"
     command: uvicorn app.main:app --host 0.0.0.0 --port 80
@@ -16,6 +18,7 @@ services:
     image: postgres:17-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Mount init.sql to postgres entrypoint
     expose:
       - 5432
     environment:
