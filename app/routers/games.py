@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Query
 from sqlalchemy.orm import Session
 from ..database import get_db
 
@@ -8,19 +8,30 @@ from ..schemas import GameCreate, GameResponse, GameUpdate
 router = APIRouter()
 
 @router.post("/games", response_model=GameResponse)
-def create_game(game: GameCreate, db: Session = Depends(get_db)):
+def create_game(
+    game: GameCreate, 
+    db: Session = Depends(get_db)
+    ):
+
     existing_game = db.query(Games).filter(Games.title == game.title).first()
+
     if existing_game:
         raise HTTPException(status_code=400, detail=f"{game.title} already exists.")
     
     new_game = Games(**game.model_dump())
+
     db.add(new_game)
     db.commit()
     db.refresh(new_game)
+
     return new_game
 
 @router.get("/games", response_model=list[GameResponse])
-def get_games(description: str | None = None, publisher: str | None = None, db: Session = Depends(get_db)):
+def get_games(
+    description: str | None = Query(default=None, description="(optional) Search for keywords in the descriptions"), 
+    publisher: str | None = Query(default=None, description="(optional) Search for games by publisher"),
+    db: Session = Depends(get_db)
+    ):
 
     games = db.query(Games)
 
@@ -38,10 +49,16 @@ def get_games(description: str | None = None, publisher: str | None = None, db: 
     return games
 
 @router.get("/games/{title}", response_model=GameResponse)
-def get_game_by_title(title: str, db: Session = Depends(get_db)):
+def get_game_by_title(
+    title: str, 
+    db: Session = Depends(get_db)
+    ):
+
     game = db.query(Games).filter(Games.title == title).first()
+
     if not game:
         raise HTTPException(status_code=404, detail=f"{title} not found.")
+    
     return game
 
 @router.put("/games/{title}", response_model=GameResponse)
