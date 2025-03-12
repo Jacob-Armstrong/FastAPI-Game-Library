@@ -28,7 +28,7 @@ def create_game(
 
 @router.get("/games", response_model=list[GameResponse])
 def get_games(
-    description: str | None = Query(default=None, description="(optional) Search for keywords in the descriptions"), 
+    description: str | None = Query(default=None, description="(optional) Search for a match in the descriptions"), 
     publisher: str | None = Query(default=None, description="(optional) Search for games by publisher"),
     db: Session = Depends(get_db)
     ):
@@ -37,7 +37,6 @@ def get_games(
 
     if description:
         games = games.filter(Games.description.ilike(f'%{description}%'))
-    
     if publisher:
         games = games.filter(Games.publisher.ilike(f'%{publisher}%'))
 
@@ -62,7 +61,12 @@ def get_game_by_title(
     return game
 
 @router.put("/games/{title}", response_model=GameResponse)
-def update_game(title: str, game_update: GameUpdate, db: Session = Depends(get_db)):
+def update_game(
+    title: str, 
+    game_update: GameUpdate, 
+    db: Session = Depends(get_db)
+    ):
+
     game = db.query(Games).filter(Games.title == title).first()
 
     if not game:
@@ -77,10 +81,15 @@ def update_game(title: str, game_update: GameUpdate, db: Session = Depends(get_d
     
     db.commit()
     db.refresh(game)
+
     return game
 
 @router.delete("/games/{title}", response_model=GameResponse)
-def delete_game(title: str, db: Session = Depends(get_db)):
+def delete_game(
+    title: str, 
+    db: Session = Depends(get_db)
+    ):
+
     game = db.query(Games).filter(Games.title == title).first()
 
     if not game:
@@ -88,4 +97,5 @@ def delete_game(title: str, db: Session = Depends(get_db)):
     
     db.delete(game)
     db.commit()
+
     return game
