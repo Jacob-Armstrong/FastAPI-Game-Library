@@ -20,8 +20,22 @@ def create_game(game: GameCreate, db: Session = Depends(get_db)):
     return new_game
 
 @router.get("/games", response_model=list[GameResponse])
-def get_games(db: Session = Depends(get_db)):
-    return db.query(Games).all()
+def get_games(description: str | None = None, publisher: str | None = None, db: Session = Depends(get_db)):
+
+    games = db.query(Games)
+
+    if description:
+        games = games.filter(Games.description.ilike(f'%{description}%'))
+    
+    if publisher:
+        games = games.filter(Games.publisher.ilike(f'%{publisher}%'))
+
+    games = games.all()
+    
+    if not games:
+        raise HTTPException(status_code=404, detail=f'No games found matching the provided parameters.')
+
+    return games
 
 @router.get("/games/{title}", response_model=GameResponse)
 def get_game_by_title(title: str, db: Session = Depends(get_db)):
@@ -29,13 +43,6 @@ def get_game_by_title(title: str, db: Session = Depends(get_db)):
     if not game:
         raise HTTPException(status_code=404, detail=f"{title} not found.")
     return game
-
-@router.get("/games", response_model=list[GameResponse])
-def get_games_by_description(desc: str | None = None, db: Session = Depends(get_db)):
-    games = db.query(Games).filter(Games.description.ilike(f'%{desc}%')).all()
-    if not games:
-        raise HTTPException(status_code=404, detail=f"No games found matching description: {desc}")
-    return games
 
 @router.put("/games/{title}", response_model=GameResponse)
 def update_game(title: str, game_update: GameUpdate, db: Session = Depends(get_db)):
