@@ -6,7 +6,7 @@ from ..database import get_db
 
 router = APIRouter()
 
-@router.post("/publishers", response_model=PublisherResponse)
+@router.post("/publishers", response_model=PublisherResponse, tags=["Publishers"])
 def create_publisher(
     publisher: PublisherCreate, 
     db: Session = Depends(get_db)
@@ -25,7 +25,7 @@ def create_publisher(
 
     return new_publisher
 
-@router.get("/publishers", response_model=list[PublisherResponse])
+@router.get("/publishers", response_model=list[PublisherResponse], tags=["Publishers"])
 def get_publishers(
     description: str | None = Query(default=None, description="(optional) Search for a match in the descriptions"), 
     games: str | None = Query(default=None, description="(optional) Search for a publisher's games, separated by comma"), 
@@ -48,7 +48,7 @@ def get_publishers(
 
     return publishers
 
-@router.get("/publishers/{name}", response_model=PublisherResponse)
+@router.get("/publishers/{name}", response_model=PublisherResponse, tags=["Publishers"])
 def get_publisher_by_name(
     name: str, db: 
     Session = Depends(get_db)
@@ -61,7 +61,7 @@ def get_publisher_by_name(
     
     return publisher
 
-@router.put("/publishers/{name}", response_model=PublisherResponse)
+@router.put("/publishers/{name}", response_model=PublisherResponse, tags=["Publishers"])
 def update_publisher(
     name: str, 
     publisher_update: PublisherUpdate, 
@@ -85,7 +85,7 @@ def update_publisher(
 
     return publisher
 
-@router.delete("/publishers/{name}", response_model=PublisherResponse)
+@router.delete("/publishers/{name}", response_model=PublisherResponse, tags=["Publishers"])
 def delete_publisher(
     name: str, db: 
     Session = Depends(get_db)
@@ -98,5 +98,5 @@ def delete_publisher(
     
     db.delete(publisher)
     db.commit()
-    
+
     return publisher

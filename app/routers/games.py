@@ -7,7 +7,7 @@ from ..schemas import GameCreate, GameResponse, GameUpdate
 
 router = APIRouter()
 
-@router.post("/games", response_model=GameResponse)
+@router.post("/games", response_model=GameResponse, tags=["Games"])
 def create_game(
     game: GameCreate, 
     db: Session = Depends(get_db)
@@ -26,7 +26,7 @@ def create_game(
 
     return new_game
 
-@router.get("/games", response_model=list[GameResponse])
+@router.get("/games", response_model=list[GameResponse], tags=["Games"])
 def get_games(
     description: str | None = Query(default=None, description="(optional) Search for a match in the descriptions"), 
     publisher: str | None = Query(default=None, description="(optional) Search for games by publisher"),
@@ -47,7 +47,7 @@ def get_games(
 
     return games
 
-@router.get("/games/{title}", response_model=GameResponse)
+@router.get("/games/{title}", response_model=GameResponse, tags=["Games"])
 def get_game_by_title(
     title: str, 
     db: Session = Depends(get_db)
@@ -60,7 +60,7 @@ def get_game_by_title(
     
     return game
 
-@router.put("/games/{title}", response_model=GameResponse)
+@router.put("/games/{title}", response_model=GameResponse, tags=["Games"])
 def update_game(
     title: str, 
     game_update: GameUpdate, 
@@ -84,7 +84,7 @@ def update_game(
 
     return game
 
-@router.delete("/games/{title}", response_model=GameResponse)
+@router.delete("/games/{title}", response_model=GameResponse, tags=["Games"])
 def delete_game(
     title: str, 
     db: Session = Depends(get_db)

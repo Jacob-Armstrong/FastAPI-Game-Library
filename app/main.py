@@ -7,7 +7,11 @@ from .routers import games, publishers
 # Create tables from .models
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+app = FastAPI(
+    title="FastAPI Game Library",
+    version="1.0.0",
+    description="This is an implementation of FastAPI using Pydantic, SQLAlchemy and Postgres."
+)
 
 # Include routers
 app.include_router(games.router)
