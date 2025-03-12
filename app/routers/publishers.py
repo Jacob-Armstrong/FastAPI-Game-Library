@@ -19,8 +19,24 @@ def create_publisher(publisher: PublisherCreate, db: Session = Depends(get_db)):
     return new_publisher
 
 @router.get("/publishers", response_model=list[PublisherResponse])
-def get_publishers(db: Session = Depends(get_db)):
-    return db.query(Publishers).all()
+def get_publishers(description: str | None = None, games: str | None = None, db: Session = Depends(get_db)):
+
+    publishers = db.query(Publishers)
+
+    if description:
+        publishers = publishers.filter(Publishers.description.ilike(f'%{description}%'))
+
+    if games:
+        gameList = games.split(', ')
+        for game in gameList:
+           publishers = publishers.filter(Publishers.games.ilike(f'%{game}%'))
+    
+    publishers = publishers.all()
+
+    if not publishers:
+        raise HTTPException(status_code=404, detail=f'No publishers found matching the provided parameters.')
+
+    return publishers
 
 @router.get("/publishers/{name}", response_model=PublisherResponse)
 def get_publisher_by_name(name: str, db: Session = Depends(get_db)):
