@@ -60,6 +60,6 @@ fastapi run
 # Access the API Documentation
 Once the server is running, you can access the built in documentation at:
 * Swagger UI: http://127.0.0.1:8000/docs
-* ReDoc: https://127.0.0.1:8000/redoc
+* ReDoc: http://127.0.0.1:8000/redoc
 
 You can also make calls with your own preference of API clients. I've included the suite of test calls I personally used while developing this in `yaak.fastapi-game-library.json` via [yaak](https://yaak.app/).
