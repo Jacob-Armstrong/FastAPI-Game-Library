@@ -26,6 +26,11 @@ docker-compose up -d
 ```
 Once both containers have started up, you will be able to access the [documentation](#access-the-api-documentation) or make requests yourself!
 
+You can stop the docker container with the following command:
+```bash
+docker-compose down -v
+```
+
 ## Option 2: Host it yourself
 
 ### Prerequisites:
