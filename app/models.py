@@ -2,7 +2,7 @@ from sqlalchemy import Column, String, Integer, Numeric, ForeignKey
 from sqlalchemy.orm import relationship
 from .database import Base
 
-# Creates the tables in postgres
+# Creates the tables in postgres (necessary if not running via Docker)
 
 class Games(Base):
     __tablename__ = "games"
